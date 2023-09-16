@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Architecture for storing Cloudwatch Log insights result to bucket
+Metadata: 
+
+Parameters: 
+  WebhookURL:
+    Description: Webhook URL to receieve notifications. (Slack, Discord, .etc)
+    Type: String
+  WebhookChannel:
+    Description: Chennal to receive notification
+    Type: String
+  LoggroupName:
+    Description: Log group name to query
+    Type: String
+  BucketName:
+    Description: Bucket name to save query result
+    Type: String
+  
+Mappings: 
+
+Conditions: 
+
+Resources: 
+
+Outputs:
