@@ -12,12 +12,39 @@ Parameters:
   LoggroupName:
     Description: Log group name to query
     Type: String
-  
-Mappings: 
 
-Conditions: 
-
-Resources: 
+Resources:
+  LogExportSchedule:
+    Type: 'AWS::Scheduler::Schedule'
+    Properties:
+      Description: Schedule to trigger Lambda
+      FlexibleTimeWindow:
+        Mode: 'Off'
+      Name: LogExportSchedule
+      ScheduleExpression: cron(0 * * * ? *)
+      Target:
+        Arn: !GetAtt LogExporter.Arn
+        RoleArn: !GetAtt EventbridgeSchedulerRole.Arn 
+  EventbridgeSchedulerRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action: "sts.AssumeRole"
+      Policies:
+        - PolicyName: EventbridgeSchedulerExecutionPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - lambda:InvokeFunction
+                Resource:
+                  - !GetAtt CWLogExporter.Arn
   CWLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
