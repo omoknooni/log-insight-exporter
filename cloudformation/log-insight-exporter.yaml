@@ -12,14 +12,66 @@ Parameters:
   LoggroupName:
     Description: Log group name to query
     Type: String
-  BucketName:
-    Description: Bucket name to save query result
-    Type: String
   
 Mappings: 
 
 Conditions: 
 
 Resources: 
-
+  CWLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 90
+  CWLogSubFilter:
+    Type: AWS::Logs::SubscriptionFilter
+    Properties:
+      DestinationArn: !GetAtt CWLogExporter.Arn
+      FilterPattern: ""
+      LogGroupName: !Ref CWLogGroup
+      RoleArn: !GetAtt CWLogSubscriptionRole.Arn
+  CWLogSubscriptionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: 
+  CWLogExporter: 
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: | 
+        test
+      Role: !GetAtt CWLogExporterExecutionRole.Arn
+      Runtime: python3.10
+  CWLogExporterExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: 
+              Service: 
+                - lambda.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+  CWLogExportBucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+  CWLogExportBucket:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CWLogExportBucket
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement:
+          - Action: 
+              - 's3:PutObject'
+            Effect: Allow
+            Resource:
 Outputs:
+  BucketName:
+    Description: Bucket name of Exported Log
+    Value: !GetAtt CWLogExportBucket.Arn
