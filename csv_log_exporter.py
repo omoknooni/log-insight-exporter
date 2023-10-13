@@ -1,5 +1,5 @@
 '''
-Daily Log Report Generator for Cloudwatch log group using log insights 
+CSV format Log Report Generator for Cloudwatch log group using log insights 
 Report's are saved to bucket
 '''
 
@@ -16,6 +16,7 @@ from datetime import datetime, timedelta
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+
 # The Slack channel to send a message to stored in the slackChannel environment variable
 SLACK_CHANNEL = os.environ['slackChannel']
 HOOK_URL = os.environ['HOOK_URL']
