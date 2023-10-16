@@ -1,6 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Architecture for storing Cloudwatch Log insights result to bucket
-Metadata: 
 
 Parameters: 
   WebhookURL:
@@ -200,7 +199,7 @@ Resources:
                   - "s3:GetObject"
                 Resource:
                   - !Sub '${CWLogExportBucket.Arn}/*'
-                  - !Sub '${CWLogGroup.Arn}:*'          # "arn:aws:logs:ap-northeast-2:416540839457:log-group:Dreamplus-NFW:*"
+                  - !Sub '${CWLogGroup.Arn}:*'
               - Effect: Allow
                 Action: 
                   - "s3:ListBucket"
@@ -217,7 +216,7 @@ Resources:
               - "sts:AssumeRole"
   CWLogExportBucket:
     Type: AWS::S3::Bucket
-    DeletionPolicy: delete
+    DeletionPolicy: Delete
     Properties:
       BucketName: log-insight-exporter
 Outputs:

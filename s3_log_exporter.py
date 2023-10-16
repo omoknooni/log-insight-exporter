@@ -46,7 +46,7 @@ def create_task():
     task_id = client.create_export_task(
         logGroupName=log_group,
         destination=f"{bucket_name}",
-        fromTime=int(startTime.timestamp())*1000,
+        fromTime=int(startTime.timestamp())*1000,       # from/to timestamp -> millisecond format
         to=int(endTime.timestamp())*1000,
         destinationPrefix=f"{bucket_path}/{year}/{month}/{day}"
         )
